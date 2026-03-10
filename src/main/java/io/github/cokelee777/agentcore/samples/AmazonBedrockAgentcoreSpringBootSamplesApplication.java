@@ -1,4 +1,4 @@
-package com.github.cokelee777.amazonbedrockagentcorespringbootsamples;
+package io.github.cokelee777.agentcore.samples;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
