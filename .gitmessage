@@ -1,0 +1,31 @@
+# <type>: <subject>
+#
+# Types:
+#   feat     - A new feature
+#   fix      - A bug fix
+#   docs     - Documentation only changes
+#   style    - Formatting, missing semi colons, etc; no logic change
+#   refactor - A code change that neither fixes a bug nor adds a feature
+#   perf     - A code change that improves performance
+#   test     - Adding missing or correcting existing tests
+#   chore    - Changes to the build process or auxiliary tools
+#   ci       - Changes to CI configuration files and scripts
+#   revert   - Reverts a previous commit
+#
+# Subject:
+#   - Use the imperative mood: "add feature" not "added feature"
+#   - Do not capitalize the first letter
+#   - No period at the end
+#   - Max 72 characters in total for the first line
+#
+# ---------------------------------------------------------------------------
+# Body (optional) — explain *why*, not *what*
+# Wrap at 72 characters
+#
+#
+# ---------------------------------------------------------------------------
+# Footer (optional)
+#
+# Reference issues:   Closes #123, Fixes #456
+# Co-authors:         Signed-off-by: Name <email@example.com>
+#
