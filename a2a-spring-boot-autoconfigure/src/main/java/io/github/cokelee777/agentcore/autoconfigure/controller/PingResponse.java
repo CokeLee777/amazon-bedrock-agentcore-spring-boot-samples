@@ -9,6 +9,10 @@ import org.springframework.util.Assert;
  */
 public record PingResponse(String status) {
 
+	/**
+	 * Creates a {@code PingResponse} and validates that {@code status} is not
+	 * {@code null}.
+	 */
 	public PingResponse {
 		Assert.notNull(status, "status must not be null");
 	}
