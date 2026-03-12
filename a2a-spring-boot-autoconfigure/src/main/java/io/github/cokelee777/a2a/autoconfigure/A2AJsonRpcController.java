@@ -1,10 +1,8 @@
 package io.github.cokelee777.a2a.autoconfigure;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import io.a2a.server.ServerCallContext;
 import io.a2a.server.auth.UnauthenticatedUser;
 import io.a2a.server.requesthandlers.RequestHandler;
@@ -30,7 +28,6 @@ import io.a2a.spec.ListTaskPushNotificationConfigResponse;
 import io.a2a.spec.MethodNotFoundError;
 import io.a2a.spec.MethodNotFoundJsonMappingException;
 import io.a2a.spec.NonStreamingJSONRPCRequest;
-import io.a2a.spec.NonStreamingJSONRPCRequestDeserializer;
 import io.a2a.spec.SendMessageRequest;
 import io.a2a.spec.SendMessageResponse;
 import io.a2a.spec.SetTaskPushNotificationConfigRequest;
@@ -38,6 +35,8 @@ import io.a2a.spec.SetTaskPushNotificationConfigResponse;
 import io.a2a.spec.Task;
 import io.a2a.spec.TaskPushNotificationConfig;
 import io.a2a.spec.UnsupportedOperationError;
+import io.a2a.util.Utils;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -53,29 +52,25 @@ import java.util.Set;
  * REST controller handling A2A Protocol JSON-RPC requests at {@code POST /}.
  *
  * <p>
- * Incoming request bodies are parsed via Jackson {@link ObjectMapper} with a registered
- * {@link NonStreamingJSONRPCRequestDeserializer} and dispatched to the appropriate
+ * Incoming request bodies are parsed via {@link io.a2a.util.Utils#unmarshalFrom(String,
+ * com.fasterxml.jackson.core.type.TypeReference)} and dispatched to the appropriate
  * {@link RequestHandler} method. Error conditions produce JSON-RPC error responses.
  * </p>
  */
 @RestController
+@RequiredArgsConstructor
 public class A2AJsonRpcController {
 
-	private final RequestHandler requestHandler;
-
-	private final ObjectMapper objectMapper;
-
 	/**
-	 * Create a new {@link A2AJsonRpcController}.
-	 * @param requestHandler the request handler dispatching A2A JSON-RPC calls
+	 * Shared {@link TypeReference} for unmarshalling non-streaming JSON-RPC requests.
+	 * Using a static field avoids raw-type warnings and repeated anonymous class
+	 * allocation per request.
 	 */
-	@SuppressWarnings({ "SpringJavaInjectionPointsAutowiringInspection", "unchecked", "rawtypes" })
-	public A2AJsonRpcController(RequestHandler requestHandler) {
-		this.requestHandler = requestHandler;
-		SimpleModule module = new SimpleModule();
-		module.addDeserializer((Class) NonStreamingJSONRPCRequest.class, new NonStreamingJSONRPCRequestDeserializer());
-		this.objectMapper = new ObjectMapper().registerModule(module).registerModule(new JavaTimeModule());
-	}
+	private static final TypeReference<NonStreamingJSONRPCRequest<?>> NON_STREAMING_JSON_RPC_REQUEST_TYPE = new TypeReference<>() {
+	};
+
+	@SuppressWarnings({ "SpringJavaInjectionPointsAutowiringInspection" })
+	private final RequestHandler requestHandler;
 
 	/**
 	 * Handles a synchronous A2A JSON-RPC request and returns the serialized response.
@@ -97,10 +92,10 @@ public class A2AJsonRpcController {
 
 		try {
 			ServerCallContext context = createCallContext();
-			request = objectMapper.readValue(body, NonStreamingJSONRPCRequest.class);
+			request = Utils.unmarshalFrom(body, NON_STREAMING_JSON_RPC_REQUEST_TYPE);
 			if (request instanceof NonStreamingJSONRPCRequest<?> nonStreamingRequest) {
 				Object response = processNonStreamingRequest(nonStreamingRequest, context);
-				return ResponseEntity.ok(objectMapper.writeValueAsString(response));
+				return ResponseEntity.ok(Utils.toJsonString(response));
 			}
 		}
 		catch (JSONRPCError e) {
@@ -128,7 +123,7 @@ public class A2AJsonRpcController {
 		try {
 			error = Objects.requireNonNullElseGet(error,
 					() -> new JSONRPCErrorResponse(new UnsupportedOperationError()));
-			return ResponseEntity.internalServerError().body(objectMapper.writeValueAsString(error));
+			return ResponseEntity.internalServerError().body(Utils.toJsonString(error));
 		}
 		catch (Exception e) {
 			error = new JSONRPCErrorResponse(new InternalError("serialization failed"));
