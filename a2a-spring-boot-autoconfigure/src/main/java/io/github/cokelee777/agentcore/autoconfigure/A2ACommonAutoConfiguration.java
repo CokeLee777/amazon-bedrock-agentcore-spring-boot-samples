@@ -21,12 +21,6 @@ import org.springframework.context.annotation.Bean;
 public class A2ACommonAutoConfiguration {
 
 	/**
-	 * Create a new {@link A2ACommonAutoConfiguration}.
-	 */
-	public A2ACommonAutoConfiguration() {
-	}
-
-	/**
 	 * Provides the health-check controller when none is already registered.
 	 * @return a new {@link PingController}
 	 */

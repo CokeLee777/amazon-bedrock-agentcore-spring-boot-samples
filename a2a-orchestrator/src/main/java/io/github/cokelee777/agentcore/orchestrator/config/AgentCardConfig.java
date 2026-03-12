@@ -19,12 +19,6 @@ import java.util.List;
 public class AgentCardConfig {
 
 	/**
-	 * Create a new {@link AgentCardConfig}.
-	 */
-	public AgentCardConfig() {
-	}
-
-	/**
 	 * Builds the agent card advertising the orchestrator's skills.
 	 * @param serverPort the HTTP port read from {@code server.port}; used to construct
 	 * the agent's self-referencing URL

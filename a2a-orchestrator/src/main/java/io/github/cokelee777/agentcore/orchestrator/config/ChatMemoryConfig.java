@@ -21,12 +21,6 @@ import org.springframework.context.annotation.Configuration;
 public class ChatMemoryConfig {
 
 	/**
-	 * Create a new {@link ChatMemoryConfig}.
-	 */
-	public ChatMemoryConfig() {
-	}
-
-	/**
 	 * Provides a simple in-memory store for chat message history.
 	 * @return a new {@link InMemoryChatMemoryRepository}
 	 */

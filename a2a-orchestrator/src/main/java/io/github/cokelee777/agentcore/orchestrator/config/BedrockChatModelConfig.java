@@ -24,12 +24,6 @@ import java.util.List;
 @Configuration
 public class BedrockChatModelConfig {
 
-	/**
-	 * Create a new {@link BedrockChatModelConfig}.
-	 */
-	public BedrockChatModelConfig() {
-	}
-
 	private static final String SYSTEM_PROMPT = """
 			당신은 주문/배송 고객 지원 에이전트입니다.
 			- 주문 내역/목록 조회(예: "내 주문 보여줘"): 현재 사용자 ID(memberId)를 getOrderList 도구에 넣어 호출하세요.

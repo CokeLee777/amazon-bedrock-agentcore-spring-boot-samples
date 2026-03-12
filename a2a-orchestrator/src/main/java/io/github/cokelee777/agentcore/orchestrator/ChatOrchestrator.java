@@ -1,5 +1,6 @@
 package io.github.cokelee777.agentcore.orchestrator;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.memory.ChatMemory;
 import org.springframework.stereotype.Service;
@@ -17,17 +18,10 @@ import org.springframework.util.Assert;
  * </p>
  */
 @Service
+@RequiredArgsConstructor
 public class ChatOrchestrator {
 
 	private final ChatClient chatClient;
-
-	/**
-	 * Create a new {@link ChatOrchestrator}.
-	 * @param chatClient the pre-configured chat client
-	 */
-	public ChatOrchestrator(ChatClient chatClient) {
-		this.chatClient = chatClient;
-	}
 
 	/**
 	 * Sends the user message in {@code request} to the LLM and returns the generated

@@ -43,7 +43,6 @@ class TextExtractorTest {
 	}
 
 	@Test
-	@SuppressWarnings("unchecked")
 	void extractFromMessage_noTextParts_returnsEmptyString() {
 		when(mockMessage.getParts()).thenReturn(List.of());
 

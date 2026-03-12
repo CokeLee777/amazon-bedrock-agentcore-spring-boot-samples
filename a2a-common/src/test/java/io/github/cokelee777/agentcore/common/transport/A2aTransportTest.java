@@ -23,13 +23,6 @@ import static org.mockito.Mockito.when;
 
 /**
  * Unit tests for {@link A2aTransport}.
- *
- * <p>
- * Uses Mockito spies to intercept {@link A2aTransport#executeMessage} so that tests never
- * require a real HTTP connection. The package-private
- * {@link A2aTransport#A2aTransport(A2ACardResolver)} constructor is used to inject a mock
- * {@link A2ACardResolver}.
- * </p>
  */
 @ExtendWith(MockitoExtension.class)
 class A2aTransportTest {
@@ -79,9 +72,6 @@ class A2aTransportTest {
 
 	@Test
 	void send_timeout_returnsEmpty() throws Exception {
-		// timeoutSeconds=0 이면 Future.get() 이 async task 시작 전에 TimeoutException 을 던질 수
-		// 있으므로
-		// 두 스텁 모두 호출되지 않을 수 있다. lenient() 로 strict stubbing 검증을 면제한다.
 		lenient().when(mockCardResolver.getAgentCard()).thenReturn(mockAgentCard);
 		A2aTransport spy = spy(new A2aTransport(mockCardResolver));
 		lenient().doAnswer(invocation -> {

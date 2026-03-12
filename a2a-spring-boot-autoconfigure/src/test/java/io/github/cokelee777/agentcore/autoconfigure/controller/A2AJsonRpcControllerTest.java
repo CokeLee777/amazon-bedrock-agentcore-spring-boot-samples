@@ -18,11 +18,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 /**
  * Unit tests for {@link A2AJsonRpcController} using Spring MVC test slice.
- *
- * <p>
- * Verifies HTTP status codes for valid requests, malformed JSON, unknown methods, and
- * handler exceptions without starting a full application context.
- * </p>
  */
 @WebMvcTest(A2AJsonRpcController.class)
 class A2AJsonRpcControllerTest {
@@ -33,7 +28,6 @@ class A2AJsonRpcControllerTest {
 	@MockitoBean
 	private RequestHandler requestHandler;
 
-	// @formatter:off
 	private static final String VALID_MESSAGE_SEND_BODY = """
 			{
 			  "jsonrpc": "2.0",
@@ -58,12 +52,7 @@ class A2AJsonRpcControllerTest {
 			  "params": {}
 			}
 			""";
-	// @formatter:on
 
-	/**
-	 * A valid {@code message/send} request with a mocked handler response returns HTTP
-	 * 200.
-	 */
 	@Test
 	void validMessageSendReturns200() throws Exception {
 		Task task = new Task.Builder().id("task-1")
@@ -77,28 +66,18 @@ class A2AJsonRpcControllerTest {
 			.andExpect(status().isOk());
 	}
 
-	/**
-	 * A request body with malformed JSON cannot be parsed and returns HTTP 500.
-	 */
 	@Test
 	void malformedJsonReturns500() throws Exception {
 		mockMvc.perform(post("/").contentType(MediaType.APPLICATION_JSON).content("{invalid-json}"))
 			.andExpect(status().isInternalServerError());
 	}
 
-	/**
-	 * A well-formed JSON-RPC request with an unrecognized method returns HTTP 500.
-	 */
 	@Test
 	void unknownMethodReturns500() throws Exception {
 		mockMvc.perform(post("/").contentType(MediaType.APPLICATION_JSON).content(UNKNOWN_METHOD_BODY))
 			.andExpect(status().isInternalServerError());
 	}
 
-	/**
-	 * When the {@link RequestHandler} throws a {@link RuntimeException}, the controller
-	 * catches it and returns HTTP 500.
-	 */
 	@Test
 	void requestHandlerThrowsReturns500() throws Exception {
 		when(requestHandler.onMessageSend(any(), any())).thenThrow(new RuntimeException("handler error"));

@@ -14,16 +14,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class A2aOrchestratorApplication {
 
-	/**
-	 * Create a new {@link A2aOrchestratorApplication}.
-	 */
-	public A2aOrchestratorApplication() {
-	}
-
-	/**
-	 * Application entry point.
-	 * @param args command-line arguments passed to {@link SpringApplication}
-	 */
 	public static void main(String[] args) {
 		SpringApplication.run(A2aOrchestratorApplication.class, args);
 	}

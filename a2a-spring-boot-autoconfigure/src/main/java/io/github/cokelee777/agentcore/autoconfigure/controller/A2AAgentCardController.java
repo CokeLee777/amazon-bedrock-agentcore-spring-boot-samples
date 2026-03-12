@@ -1,6 +1,7 @@
 package io.github.cokelee777.agentcore.autoconfigure.controller;
 
 import io.a2a.spec.AgentCard;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,17 +17,10 @@ import org.springframework.web.bind.annotation.RestController;
  * </p>
  */
 @RestController
+@RequiredArgsConstructor
 public class A2AAgentCardController {
 
 	private final AgentCard agentCard;
-
-	/**
-	 * Create a new {@link A2AAgentCardController}.
-	 * @param agentCard the agent card bean to serve
-	 */
-	public A2AAgentCardController(AgentCard agentCard) {
-		this.agentCard = agentCard;
-	}
 
 	/**
 	 * Returns the agent card for A2A discovery.

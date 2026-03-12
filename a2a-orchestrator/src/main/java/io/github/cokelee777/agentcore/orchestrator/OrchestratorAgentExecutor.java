@@ -9,6 +9,7 @@ import io.a2a.spec.Message;
 import io.a2a.spec.TextPart;
 import io.github.cokelee777.agentcore.common.util.TextExtractor;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -30,19 +31,12 @@ import java.util.UUID;
  */
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class OrchestratorAgentExecutor implements AgentExecutor {
 
 	static final String SESSION_HEADER = "X-Amzn-Bedrock-AgentCore-Runtime-Session-Id";
 
 	private final ChatOrchestrator chatOrchestrator;
-
-	/**
-	 * Create a new {@link OrchestratorAgentExecutor}.
-	 * @param chatOrchestrator the orchestrator delegating to the LLM
-	 */
-	public OrchestratorAgentExecutor(ChatOrchestrator chatOrchestrator) {
-		this.chatOrchestrator = chatOrchestrator;
-	}
 
 	@Override
 	public void execute(RequestContext context, EventQueue eventQueue) throws JSONRPCError {

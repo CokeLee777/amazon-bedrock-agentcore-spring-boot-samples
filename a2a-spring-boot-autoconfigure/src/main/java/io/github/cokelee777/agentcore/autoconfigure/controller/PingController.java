@@ -17,12 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class PingController {
 
 	/**
-	 * Create a new {@link PingController}.
-	 */
-	public PingController() {
-	}
-
-	/**
 	 * Returns a healthy status to confirm the agent is reachable.
 	 * @return {@code 200 OK} with {@code {"status":"healthy"}}
 	 */

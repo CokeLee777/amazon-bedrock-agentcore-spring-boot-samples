@@ -41,12 +41,6 @@ import java.util.concurrent.TimeUnit;
 public class A2AServerAutoConfiguration {
 
 	/**
-	 * Create a new {@link A2AServerAutoConfiguration}.
-	 */
-	public A2AServerAutoConfiguration() {
-	}
-
-	/**
 	 * Assembles the JSON-RPC controller by wiring a {@link DefaultRequestHandler} from
 	 * the provided infrastructure beans.
 	 * @param agentExecutor the agent executor that processes incoming tasks
