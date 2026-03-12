@@ -1,0 +1,35 @@
+# Git / IDE
+.git
+.gitignore
+.gitattributes
+.gitmessage
+.cursor
+.idea
+.vscode
+*.iml
+.sdkmanrc
+
+# Docs (README만 필요하면 예외; 없으면 전부 제외)
+*.md
+!README.md
+CLAUDE.md
+AGENTS.md
+
+# OS / misc
+.DS_Store
+**/.DS_Store
+
+# Windows wrapper — Linux image only
+gradlew.bat
+
+# Build outputs (rebuilt in image)
+**/build
+**/out
+.gradle
+
+# Local env (use Runtime/ECS task env instead)
+.env
+.env.*
+
+# Tests (skipped in image build)
+**/src/test
