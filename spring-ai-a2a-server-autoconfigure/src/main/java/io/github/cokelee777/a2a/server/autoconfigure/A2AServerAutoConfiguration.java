@@ -13,7 +13,6 @@ import io.a2a.server.tasks.PushNotificationSender;
 import io.a2a.server.tasks.TaskStateProvider;
 import io.a2a.server.tasks.TaskStore;
 import io.a2a.spec.AgentCard;
-import io.a2a.spec.Task;
 import io.github.cokelee777.a2a.server.controller.AgentCardController;
 import io.github.cokelee777.a2a.server.controller.MessageController;
 import io.github.cokelee777.a2a.server.controller.TaskController;
@@ -150,15 +149,15 @@ public class A2AServerAutoConfiguration {
 				maxPoolSize, keepAliveSeconds);
 
 		AtomicInteger threadCounter = new AtomicInteger(1);
-        // Non-daemon threads as per A2A spec
+		// Non-daemon threads as per A2A spec
 
-        return new ThreadPoolExecutor(corePoolSize, maxPoolSize, keepAliveSeconds,
-                TimeUnit.SECONDS, new LinkedBlockingQueue<>(), runnable -> {
-                    Thread thread = new Thread(runnable);
-                    thread.setName("a2a-agent-executor-" + threadCounter.getAndIncrement());
-                    thread.setDaemon(false); // Non-daemon threads as per A2A spec
-                    return thread;
-                });
+		return new ThreadPoolExecutor(corePoolSize, maxPoolSize, keepAliveSeconds, TimeUnit.SECONDS,
+				new LinkedBlockingQueue<>(), runnable -> {
+					Thread thread = new Thread(runnable);
+					thread.setName("a2a-agent-executor-" + threadCounter.getAndIncrement());
+					thread.setDaemon(false); // Non-daemon threads as per A2A spec
+					return thread;
+				});
 	}
 
 	/**
