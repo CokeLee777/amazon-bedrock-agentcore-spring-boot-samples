@@ -1,6 +1,3 @@
-val a2aVersion = rootProject.extra["a2aVersion"] as String
-val gsonVersion = rootProject.extra["gsonVersion"] as String
-
 dependencies {
     implementation(project(":a2a-common"))
     implementation(project(":spring-ai-a2a-server-autoconfigure"))
