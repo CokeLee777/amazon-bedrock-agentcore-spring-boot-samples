@@ -21,7 +21,7 @@ public class SpringA2AConfigProvider implements A2AConfigProvider {
 
 	private final DefaultValuesConfigProvider defaultValues;
 
-	SpringA2AConfigProvider(Environment env, DefaultValuesConfigProvider defaultValues) {
+	public SpringA2AConfigProvider(Environment env, DefaultValuesConfigProvider defaultValues) {
 		this.env = env;
 		this.defaultValues = defaultValues;
 	}

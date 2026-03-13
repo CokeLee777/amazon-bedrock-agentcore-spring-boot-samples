@@ -1,0 +1,5 @@
+server:
+  port: ${ORDER_AGENT_PORT:8081}
+
+a2a:
+  order-agent-url: ${ORDER_AGENT_URL:http://localhost:8081}

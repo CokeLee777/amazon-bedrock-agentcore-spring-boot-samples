@@ -1,0 +1,5 @@
+server:
+  port: ${PAYMENT_AGENT_PORT:8083}
+
+a2a:
+  payment-agent-url: ${PAYMENT_AGENT_URL:http://localhost:8083}
