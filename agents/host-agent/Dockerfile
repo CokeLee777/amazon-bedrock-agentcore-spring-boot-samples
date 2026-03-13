@@ -1,52 +1,50 @@
-# Amazon Bedrock AgentCore Runtime — A2A orchestrator container
+# Amazon Bedrock AgentCore Runtime — host-agent container
 #
 # A2A protocol contract (see AWS docs runtime-a2a-protocol-contract):
 #   - Platform: linux/arm64 (required)
-#   - Listen: 0.0.0.0:9000
+#   - Listen: 0.0.0.0:8080
 #   - POST /           → JSON-RPC 2.0 (message/send, etc.)
 #   - GET /.well-known/agent-card.json → Agent discovery
 #   - GET /ping        → health (200 + JSON)
 #
-# Build for AgentCore (ARM64):
-#   docker buildx build --platform linux/arm64 -t a2a-orchestrator:arm64 --load .
-# Push to ECR then create_agent_runtime with containerConfiguration.containerUri.
+# Build (from project root — ARM64 for AgentCore):
+#   docker buildx build --platform linux/arm64 \
+#     -f agents/host-agent/Dockerfile \
+#     -t host-agent:arm64 --load .
 #
-# Runtime env (set in AgentCore/ECS/task definition):
-#   BEDROCK_REGION, BEDROCK_MODEL_ID, ORCHESTRATOR_URL (public URL of this runtime),
-#   ORDER_AGENT_URL, DELIVERY_AGENT_URL, PAYMENT_AGENT_URL, etc.
+# Runtime env (set in AgentCore / ECS task definition):
+#   BEDROCK_REGION, BEDROCK_MODEL_ID, ORCHESTRATOR_URL,
+#   ORDER_AGENT_URL, DELIVERY_AGENT_URL, PAYMENT_AGENT_URL,
+#   A2A_CLIENT_TIMEOUT_SECONDS
 
 # ---------- Build stage (JAR is bytecode; any arch) ----------
 FROM eclipse-temurin:21-jdk-jammy AS builder
 
 WORKDIR /app
 
-# Gradle wrapper + sources
 COPY gradlew settings.gradle.kts build.gradle.kts ./
 COPY gradle ./gradle
 COPY a2a-common ./a2a-common
-COPY a2a-spring-boot-autoconfigure ./a2a-spring-boot-autoconfigure
-COPY a2a-orchestrator ./a2a-orchestrator
+COPY spring-ai-a2a-server ./spring-ai-a2a-server
+COPY spring-ai-a2a-server-autoconfigure ./spring-ai-a2a-server-autoconfigure
+COPY agents/host-agent ./agents/host-agent
 
 RUN chmod +x gradlew \
-	&& ./gradlew :a2a-orchestrator:bootJar --no-daemon -x test \
-	&& cp a2a-orchestrator/build/libs/a2a-orchestrator-*-SNAPSHOT.jar /app/app.jar \
-	&& ls -la /app/app.jar
+	&& ./gradlew :agents:host-agent:bootJar --no-daemon -x test \
+	&& cp agents/host-agent/build/libs/host-agent-*-SNAPSHOT.jar /app/app.jar
 
 # ---------- Runtime stage (must be ARM64 for AgentCore) ----------
 FROM --platform=linux/arm64 eclipse-temurin:21-jre-jammy
 
 WORKDIR /app
 
-# Non-root
 RUN groupadd --system app && useradd --system --gid app app
 USER app
 
 COPY --from=builder --chown=app:app /app/app.jar /app/app.jar
 
-# A2A contract port
-EXPOSE 9000
+EXPOSE 8080
 
-# Spring Boot binds to all interfaces by default; server.port already 9000 in application.yml
 ENV JAVA_OPTS="-XX:+UseContainerSupport -XX:MaxRAMPercentage=75.0"
 
 ENTRYPOINT ["sh", "-c", "exec java $JAVA_OPTS -jar /app/app.jar"]

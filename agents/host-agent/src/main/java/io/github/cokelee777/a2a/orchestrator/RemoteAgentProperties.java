@@ -25,7 +25,7 @@ public record RemoteAgentProperties(Map<String, Agent> agents) {
 	/**
 	 * Connection details for a single downstream agent.
 	 *
-	 * @param url the base URL of the agent (e.g., {@code http://localhost:8081})
+	 * @param url the base URL of the agent (e.g., {@code http://localhost:9001})
 	 */
 	public record Agent(String url) {
 

@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Bean;
  * Entry point for the A2A Orchestrator service.
  *
  * <p>
- * Runs on port 9000. Receives requests from Amazon Bedrock AgentCore Runtime via
+ * Runs on port 8080. Receives requests from Amazon Bedrock AgentCore Runtime via
  * {@code POST /invocations} and coordinates downstream order, delivery, and payment
  * agents via LLM tool-calling ({@link RemoteAgentConnections}).
  * </p>
@@ -20,7 +20,7 @@ import org.springframework.context.annotation.Bean;
 @Slf4j
 @SpringBootApplication
 @EnableConfigurationProperties(RemoteAgentProperties.class)
-public class A2aOrchestratorApplication {
+public class HostAgentApplication {
 
 	private static final String ROUTING_SYSTEM_PROMPT = """
 			**역할:** 당신은 전문 라우팅 위임자입니다. 주문, 배송, 결제에 관한 사용자 문의를 적절한 전문 원격 에이전트에게 정확하게 위임하는 것이 주요 기능입니다.
@@ -48,7 +48,7 @@ public class A2aOrchestratorApplication {
 	 * @param args command-line arguments
 	 */
 	public static void main(String[] args) {
-		SpringApplication.run(A2aOrchestratorApplication.class, args);
+		SpringApplication.run(HostAgentApplication.class, args);
 	}
 
 	/**
