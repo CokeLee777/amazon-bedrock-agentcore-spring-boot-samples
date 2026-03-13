@@ -47,7 +47,7 @@ public class OrderAgentTool extends A2aTool {
 	 */
 	@Tool(description = "해당 회원의 주문 내역(목록)을 조회합니다. 현재 사용자 ID(memberId)가 필요합니다.")
 	public String getOrderList(OrderListRequest request) {
-		return sendRequest("order_list", "MEMBER-" + request.memberId() + " 주문내역 조회");
+		return sendRequest("MEMBER-" + request.memberId() + " 주문내역 조회");
 	}
 
 	/**
@@ -58,7 +58,7 @@ public class OrderAgentTool extends A2aTool {
 	 */
 	@Tool(description = "주문 취소 가능 여부 확인. 주문번호(ORD-xxxx)가 필요합니다.")
 	public String checkOrderCancellability(OrderCancellabilityRequest request) {
-		return sendRequest("order_cancellability_check", request.orderNumber() + " 취소 가능 여부 확인");
+		return sendRequest(request.orderNumber() + " 취소 가능 여부 확인");
 	}
 
 }

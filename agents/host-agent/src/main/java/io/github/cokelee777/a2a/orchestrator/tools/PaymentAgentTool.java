@@ -40,7 +40,7 @@ public class PaymentAgentTool extends A2aTool {
 	 */
 	@Tool(description = "결제/환불 상태 확인. 주문번호(ORD-xxxx)가 필요합니다.")
 	public String getPaymentStatus(PaymentStatusRequest request) {
-		return sendRequest("payment_status", request.orderNumber() + " 결제 상태 확인");
+		return sendRequest(request.orderNumber() + " 결제 상태 확인");
 	}
 
 }

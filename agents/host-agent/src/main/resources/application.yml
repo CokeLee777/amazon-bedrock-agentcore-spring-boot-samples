@@ -11,6 +11,10 @@ spring:
           options:
             model: ${BEDROCK_MODEL_ID:amazon.nova-pro-v1:0}
 
+remote:
+  agent:
+    urls: http://localhost:8081/,http://localhost:8082/,http://localhost:8083/
+
 a2a:
   # This orchestrator's public base URL (AgentCard.url / JSON-RPC interface).
   # Use a Runtime-reachable URL in production; localhost is for local bootRun only.
@@ -20,7 +24,3 @@ a2a:
   payment-agent-url: ${PAYMENT_AGENT_URL:http://localhost:8083}
   client:
     timeout-seconds: ${A2A_CLIENT_TIMEOUT_SECONDS:15}
-
-chat:
-  memory:
-    max-messages: ${CHAT_MEMORY_MAX_MESSAGES:20}

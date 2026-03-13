@@ -40,7 +40,7 @@ public class DeliveryAgentTool extends A2aTool {
 	 */
 	@Tool(description = "배송 조회. 운송장번호(TRACK-xxxx)가 필요합니다.")
 	public String trackDelivery(DeliveryRequest request) {
-		return sendRequest("track_delivery", request.trackingNumber() + " 배송 조회");
+		return sendRequest(request.trackingNumber() + " 배송 조회");
 	}
 
 }

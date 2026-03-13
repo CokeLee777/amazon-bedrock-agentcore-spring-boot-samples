@@ -1,13 +1,9 @@
 package io.github.cokelee777.a2a.orchestrator.tools;
 
+import io.a2a.A2A;
 import io.a2a.spec.Message;
-import io.a2a.spec.TextPart;
-import io.github.cokelee777.a2a.common.A2aMetadataKeys;
 import io.github.cokelee777.a2a.common.A2aTransport;
 import org.springframework.beans.factory.annotation.Value;
-
-import java.util.List;
-import java.util.Map;
 
 /**
  * Abstract base class for Spring AI {@code @Tool} implementations that delegate to
@@ -41,16 +37,11 @@ public abstract class A2aTool {
 	/**
 	 * Sends a {@code message/send} request to the downstream agent and returns the text
 	 * response.
-	 * @param skillId the skill ID to place in the message metadata so the agent can route
-	 * the request
 	 * @param text the natural-language text to include in the message body
 	 * @return the agent's response text, or a Korean error message if the call fails
 	 */
-	protected String sendRequest(String skillId, String text) {
-		Message message = new Message.Builder().role(Message.Role.USER)
-			.parts(List.of(new TextPart(text)))
-			.metadata(Map.of(A2aMetadataKeys.SKILL_ID, skillId))
-			.build();
+	protected String sendRequest(String text) {
+		Message message = A2A.toUserMessage(text);
 		return transport.send(message, timeoutSeconds).orElse("에이전트 호출 중 오류가 발생했습니다.");
 	}
 
