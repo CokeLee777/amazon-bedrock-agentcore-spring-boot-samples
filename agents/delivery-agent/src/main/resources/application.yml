@@ -12,4 +12,4 @@ spring:
             model: ${BEDROCK_MODEL_ID:amazon.nova-pro-v1:0}
 
 a2a:
-  agent-url: ${AGENT_URL}
+  agent-url: ${AGENT_URL:http://localhost:9000}

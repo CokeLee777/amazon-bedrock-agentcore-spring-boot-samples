@@ -18,8 +18,8 @@ a2a:
 remote:
   agents:
     order-agent:
-      url: ${ORDER_AGENT_URL}
+      url: ${ORDER_AGENT_URL:http://localhost:9000}
     delivery-agent:
-      url: ${DELIVERY_AGENT_URL}
+      url: ${DELIVERY_AGENT_URL:http://localhost:9000}
     payment-agent:
-      url: ${PAYMENT_AGENT_URL}
+      url: ${PAYMENT_AGENT_URL:http://localhost:9000}
