@@ -116,6 +116,19 @@ public class A2aTransport {
 	}
 
 	/**
+	 * Returns the {@link AgentCard} for this transport's target agent.
+	 *
+	 * <p>
+	 * The card is resolved lazily on the first call and cached for subsequent
+	 * invocations.
+	 * </p>
+	 * @return the resolved {@link AgentCard}
+	 */
+	public AgentCard getAgentCard() {
+		return resolveAgentCard();
+	}
+
+	/**
 	 * Resolves and caches the {@link AgentCard} for this transport's target agent.
 	 *
 	 * <p>
