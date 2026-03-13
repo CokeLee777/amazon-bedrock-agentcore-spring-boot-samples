@@ -38,3 +38,7 @@ out/
 
 ### Git Worktrees ###
 .worktrees/
+
+### Secrets ###
+.env
+.env.*
