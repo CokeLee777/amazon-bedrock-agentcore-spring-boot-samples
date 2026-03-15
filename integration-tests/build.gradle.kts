@@ -1,5 +1,6 @@
 dependencies {
     testImplementation(project(":agent-common"))
+    testImplementation(project(":agents:host-agent"))
     testImplementation(project(":agents:order-agent"))
     testImplementation(project(":agents:delivery-agent"))
     testImplementation(project(":agents:payment-agent"))
