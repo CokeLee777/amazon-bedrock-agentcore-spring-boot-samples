@@ -38,7 +38,8 @@ public class MessageController {
 		try {
 			// Create server call context
 			// TODO: Add support for auth context, state, and extensions
-			ServerCallContext context = new ServerCallContext(null, // auth context (not used yet)
+			ServerCallContext context = new ServerCallContext(null, // auth context (not
+																	// used yet)
 					Map.of(), // state
 					Set.of() // extensions
 			);

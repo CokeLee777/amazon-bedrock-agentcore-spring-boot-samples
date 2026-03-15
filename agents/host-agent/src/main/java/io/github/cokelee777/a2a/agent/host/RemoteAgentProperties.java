@@ -1,4 +1,4 @@
-package io.github.cokelee777.a2a.orchestrator;
+package io.github.cokelee777.a2a.agent.host;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.util.Assert;

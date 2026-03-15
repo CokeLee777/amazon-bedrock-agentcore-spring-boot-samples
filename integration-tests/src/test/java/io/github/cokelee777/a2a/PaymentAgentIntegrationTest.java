@@ -27,13 +27,12 @@ import static org.mockito.Mockito.when;
  * Integration tests for the Payment Agent.
  *
  * <p>
- * Starts the full Payment Agent Spring Boot application with a mocked
- * {@link ChatModel}, then verifies A2A protocol compliance (AgentCard endpoint) and
- * end-to-end transport via {@link A2ATransport}.
+ * Starts the full Payment Agent Spring Boot application with a mocked {@link ChatModel},
+ * then verifies A2A protocol compliance (AgentCard endpoint) and end-to-end transport via
+ * {@link A2ATransport}.
  * </p>
  */
-@SpringBootTest(classes = PaymentAgentApplication.class,
-		webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT,
+@SpringBootTest(classes = PaymentAgentApplication.class, webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT,
 		properties = { "server.port=19003", "a2a.agent-url=http://localhost:19003",
 				"spring.autoconfigure.exclude=org.springframework.ai.model.bedrock.converse.autoconfigure.BedrockConverseProxyChatAutoConfiguration" })
 class PaymentAgentIntegrationTest {
@@ -50,8 +49,7 @@ class PaymentAgentIntegrationTest {
 
 	@BeforeEach
 	void setupChatModelMock() {
-		ChatResponse response = new ChatResponse(
-				List.of(new Generation(new AssistantMessage(MOCK_RESPONSE))));
+		ChatResponse response = new ChatResponse(List.of(new Generation(new AssistantMessage(MOCK_RESPONSE))));
 		when(chatModel.call(any(Prompt.class))).thenReturn(response);
 	}
 

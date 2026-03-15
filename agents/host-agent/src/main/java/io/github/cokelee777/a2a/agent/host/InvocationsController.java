@@ -1,4 +1,4 @@
-package io.github.cokelee777.a2a.orchestrator;
+package io.github.cokelee777.a2a.agent.host;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

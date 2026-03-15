@@ -1,4 +1,4 @@
-package io.github.cokelee777.a2a.orchestrator;
+package io.github.cokelee777.a2a.agent.host;
 
 import io.a2a.A2A;
 import io.a2a.spec.AgentCard;
@@ -35,23 +35,23 @@ public class RemoteAgentConnections {
 	 * @param properties the remote agent connection properties
 	 */
 	public RemoteAgentConnections(RemoteAgentProperties properties) {
-		properties.agents()
-                .forEach((key, value) -> {
-                    String agentUrl = value.url();
-                    try {
-                        log.info("Resolving agent card from: {}", agentUrl);
+		properties.agents().forEach((key, value) -> {
+			String agentUrl = value.url();
+			try {
+				log.info("Resolving agent card from: {}", agentUrl);
 
-                        String path = new URI(agentUrl).getPath();
+				String path = new URI(agentUrl).getPath();
 
-                        AgentCard card = A2A.getAgentCard(agentUrl, path + ".well-known/agent-card.json", null);
+				AgentCard card = A2A.getAgentCard(agentUrl, path + ".well-known/agent-card.json", null);
 
-                        this.cards.put(card.name(), card);
+				this.cards.put(card.name(), card);
 
-                        log.info("Discovered agent: {} at {}", card.name(), agentUrl);
-                    } catch (Exception e) {
-                        log.error("Failed to connect to agent at {}: {}", agentUrl, e.getMessage());
-                    }
-                });
+				log.info("Discovered agent: {} at {}", card.name(), agentUrl);
+			}
+			catch (Exception e) {
+				log.error("Failed to connect to agent at {}: {}", agentUrl, e.getMessage());
+			}
+		});
 	}
 
 	/**
@@ -79,10 +79,10 @@ public class RemoteAgentConnections {
 	 */
 	public String getAgentDescriptions() {
 		return this.cards.values()
-				.stream()
-				.map(card -> String.format("{\"name\": \"%s\", \"description\": \"%s\"}", card.name(),
-						card.description() != null ? card.description() : "No description"))
-				.collect(Collectors.joining("\n"));
+			.stream()
+			.map(card -> String.format("{\"name\": \"%s\", \"description\": \"%s\"}", card.name(),
+					card.description() != null ? card.description() : "No description"))
+			.collect(Collectors.joining("\n"));
 	}
 
 	/**

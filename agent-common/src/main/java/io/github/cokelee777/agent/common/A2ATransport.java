@@ -62,10 +62,10 @@ public class A2ATransport {
 			// Create client with consumer via builder
 			ClientConfig clientConfig = new ClientConfig.Builder().setAcceptedOutputModes(List.of("text")).build();
 			Client client = Client.builder(agentCard)
-					.clientConfig(clientConfig)
-					.withTransport(JSONRPCTransport.class, new JSONRPCTransportConfig())
-					.addConsumers(List.of(consumer))
-					.build();
+				.clientConfig(clientConfig)
+				.withTransport(JSONRPCTransport.class, new JSONRPCTransportConfig())
+				.addConsumers(List.of(consumer))
+				.build();
 
 			client.sendMessage(message);
 

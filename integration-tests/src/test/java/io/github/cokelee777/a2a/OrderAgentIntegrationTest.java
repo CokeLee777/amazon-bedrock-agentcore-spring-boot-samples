@@ -28,12 +28,11 @@ import static org.mockito.Mockito.when;
  *
  * <p>
  * Starts the full Order Agent Spring Boot application with a mocked {@link ChatModel},
- * then verifies A2A protocol compliance (AgentCard endpoint) and end-to-end transport
- * via {@link A2ATransport}.
+ * then verifies A2A protocol compliance (AgentCard endpoint) and end-to-end transport via
+ * {@link A2ATransport}.
  * </p>
  */
-@SpringBootTest(classes = OrderAgentApplication.class,
-		webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT,
+@SpringBootTest(classes = OrderAgentApplication.class, webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT,
 		properties = { "server.port=19001", "a2a.agent-url=http://localhost:19001",
 				"spring.autoconfigure.exclude=org.springframework.ai.model.bedrock.converse.autoconfigure.BedrockConverseProxyChatAutoConfiguration" })
 class OrderAgentIntegrationTest {
@@ -50,8 +49,7 @@ class OrderAgentIntegrationTest {
 
 	@BeforeEach
 	void setupChatModelMock() {
-		ChatResponse response = new ChatResponse(
-				List.of(new Generation(new AssistantMessage(MOCK_RESPONSE))));
+		ChatResponse response = new ChatResponse(List.of(new Generation(new AssistantMessage(MOCK_RESPONSE))));
 		when(chatModel.call(any(Prompt.class))).thenReturn(response);
 	}
 

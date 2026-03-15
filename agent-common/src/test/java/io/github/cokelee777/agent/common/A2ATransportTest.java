@@ -39,8 +39,7 @@ class A2ATransportTest {
 
 	@Test
 	void extractTextFromTask_singleTextPart_returnsText() {
-		Task task = taskWithArtifacts(List.of(
-				artifactWithParts(List.of(new TextPart("hello")))));
+		Task task = taskWithArtifacts(List.of(artifactWithParts(List.of(new TextPart("hello")))));
 
 		String result = A2ATransport.extractTextFromTask(task);
 
@@ -49,8 +48,7 @@ class A2ATransportTest {
 
 	@Test
 	void extractTextFromTask_multipleTextParts_concatenatesAll() {
-		Task task = taskWithArtifacts(List.of(
-				artifactWithParts(List.of(new TextPart("foo"), new TextPart("bar")))));
+		Task task = taskWithArtifacts(List.of(artifactWithParts(List.of(new TextPart("foo"), new TextPart("bar")))));
 
 		String result = A2ATransport.extractTextFromTask(task);
 
@@ -59,8 +57,7 @@ class A2ATransportTest {
 
 	@Test
 	void extractTextFromTask_multipleArtifacts_concatenatesAcrossAll() {
-		Task task = taskWithArtifacts(List.of(
-				artifactWithParts(List.of(new TextPart("first "))),
+		Task task = taskWithArtifacts(List.of(artifactWithParts(List.of(new TextPart("first "))),
 				artifactWithParts(List.of(new TextPart("second")))));
 
 		String result = A2ATransport.extractTextFromTask(task);
@@ -70,8 +67,7 @@ class A2ATransportTest {
 
 	@Test
 	void extractTextFromTask_nonTextPart_skipped() {
-		Task task = taskWithArtifacts(List.of(
-				artifactWithParts(List.of(new DataPart(Map.of("key", "value"))))));
+		Task task = taskWithArtifacts(List.of(artifactWithParts(List.of(new DataPart(Map.of("key", "value"))))));
 
 		String result = A2ATransport.extractTextFromTask(task);
 
@@ -80,10 +76,8 @@ class A2ATransportTest {
 
 	@Test
 	void extractTextFromTask_mixedParts_onlyTextExtracted() {
-		Task task = taskWithArtifacts(List.of(
-				artifactWithParts(List.of(
-						new TextPart("text"),
-						new DataPart(Map.of("key", "value"))))));
+		Task task = taskWithArtifacts(
+				List.of(artifactWithParts(List.of(new TextPart("text"), new DataPart(Map.of("key", "value"))))));
 
 		String result = A2ATransport.extractTextFromTask(task);
 
