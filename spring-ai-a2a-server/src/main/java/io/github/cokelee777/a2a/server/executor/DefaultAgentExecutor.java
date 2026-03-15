@@ -21,7 +21,6 @@ import io.a2a.server.agentexecution.RequestContext;
 import io.a2a.server.events.EventQueue;
 import io.a2a.server.tasks.TaskUpdater;
 import io.a2a.spec.JSONRPCError;
-import io.a2a.spec.Message;
 import io.a2a.spec.Task;
 import io.a2a.spec.TaskNotCancelableError;
 import io.a2a.spec.TaskState;
@@ -30,7 +29,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Base class for A2A AgentExecutors using Spring AI ChatClient.
@@ -39,15 +37,15 @@ import java.util.stream.Collectors;
  * This executor handles Task-based execution, managing the complete task lifecycle:
  * <ul>
  * <li>Creates and submits task via {@link TaskUpdater}</li>
- * <li>Extracts user message from A2A protocol {@link Message}</li>
- * <li>Delegates to {@link #processUserMessage(String)} for agent-specific logic</li>
+ * <li>Extracts user message from A2A protocol using {@code TextExtractor}</li>
+ * <li>Delegates to {@link ChatClientExecutorHandler} for agent-specific logic</li>
  * <li>Wraps response as task artifact and completes the task</li>
  * </ul>
  *
  * <p>
- * Implementations only need to provide the {@link #processUserMessage(String)} method
- * that takes a simple String and returns a String response. All A2A protocol complexity
- * and task management is handled by this base class.
+ * Implementations only need to provide a {@link ChatClientExecutorHandler} that takes a
+ * simple String and returns a String response. All A2A protocol complexity and task
+ * management is handled by this base class.
  *
  * @author Ilayaperumal Gopinathan
  * @author Christian Tzolov
@@ -63,21 +61,6 @@ public class DefaultAgentExecutor implements AgentExecutor {
 	public DefaultAgentExecutor(ChatClient chatClient, ChatClientExecutorHandler chatClientExecutorHandler) {
 		this.chatClient = chatClient;
 		this.chatClientExecutorHandler = chatClientExecutorHandler;
-	}
-
-	/**
-	 * Extracts text content from A2A message.
-	 */
-	public static String extractTextFromMessage(Message message) {
-		if (message == null || message.getParts() == null) {
-			return "";
-		}
-		return message.getParts()
-			.stream()
-			.filter(part -> part instanceof TextPart)
-			.map(part -> ((TextPart) part).getText())
-			.collect(Collectors.joining())
-			.trim();
 	}
 
 	@Override

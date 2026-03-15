@@ -20,7 +20,7 @@ public class PingController {
 	 * Returns a healthy status to confirm the agent is reachable.
 	 * @return {@code 200 OK} with {@code {"status":"healthy"}}
 	 */
-	@GetMapping(value = "/ping", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(path = "/ping", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<PingResponse> ping() {
 		return ResponseEntity.ok(new PingResponse("Healthy"));
 	}

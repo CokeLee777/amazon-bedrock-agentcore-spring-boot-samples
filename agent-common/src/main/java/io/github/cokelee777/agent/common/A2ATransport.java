@@ -10,7 +10,7 @@ import io.a2a.spec.AgentCard;
 import io.a2a.spec.Message;
 import io.a2a.spec.Task;
 import io.a2a.spec.TaskState;
-import io.a2a.spec.TextPart;
+import io.github.cokelee777.agent.common.util.TextExtractor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
@@ -55,7 +55,7 @@ public class A2ATransport {
 						responseFuture.complete("");
 						return;
 					}
-					responseFuture.complete(extractTextFromTask(task));
+					responseFuture.complete(TextExtractor.extractTextFromTask(task));
 				}
 			};
 
@@ -78,27 +78,6 @@ public class A2ATransport {
 			log.error("Error sending message to agent '{}': {}", agentCard.name(), e.getMessage());
 			return String.format("Error communicating with agent '%s': %s", agentCard.name(), e.getMessage());
 		}
-	}
-
-	/**
-	 * Concatenates the text of all {@link TextPart} parts across every artifact in the
-	 * given task.
-	 * @param task the A2A task whose artifacts to extract
-	 * @return the concatenated text, or an empty string if the task has no artifacts or
-	 * text parts
-	 */
-	static String extractTextFromTask(Task task) {
-		if (task.getArtifacts() == null) {
-			return "";
-		}
-
-		StringBuilder textBuilder = new StringBuilder();
-		task.getArtifacts().forEach(artifact -> artifact.parts().forEach(part -> {
-			if (part instanceof TextPart textPart) {
-				textBuilder.append(textPart.getText());
-			}
-		}));
-		return textBuilder.toString();
 	}
 
 }

@@ -62,7 +62,7 @@ public class InvocationsController {
 	 * @param request the invocation request containing the user prompt
 	 * @return the generated response text from the LLM
 	 */
-	@PostMapping("/invocations")
+	@PostMapping(path = "/invocations")
 	public String invoke(@RequestBody InvocationRequest request) {
 		log.info("Received: {}", request.prompt());
 		String systemPrompt = String.format(ROUTING_SYSTEM_PROMPT, this.connections.getAgentDescriptions());

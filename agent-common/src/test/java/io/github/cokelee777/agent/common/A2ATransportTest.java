@@ -1,95 +1,73 @@
 package io.github.cokelee777.agent.common;
 
-import io.a2a.spec.Artifact;
-import io.a2a.spec.DataPart;
-import io.a2a.spec.Part;
-import io.a2a.spec.Task;
-import io.a2a.spec.TaskState;
-import io.a2a.spec.TaskStatus;
-import io.a2a.spec.TextPart;
+import io.a2a.A2A;
+import io.a2a.spec.AgentCard;
+import io.a2a.spec.AgentCapabilities;
+import io.a2a.spec.AgentInterface;
+import io.a2a.spec.Message;
+import io.a2a.spec.TransportProtocol;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
-import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * Unit tests for {@link A2ATransport#extractTextFromTask}.
+ * Unit tests for {@link A2ATransport#send}.
+ *
+ * <p>
+ * The success path (task completion with text artifacts) requires a live A2A server and
+ * is covered by integration tests. These unit tests focus on error-handling behavior.
+ * </p>
  */
 class A2ATransportTest {
 
+	private static final String AGENT_NAME = "Test Agent";
+
+	/**
+	 * When the downstream agent URL is unreachable (connection refused), {@code send}
+	 * should return an error message string instead of throwing.
+	 */
 	@Test
-	void extractTextFromTask_nullArtifacts_returnsEmpty() {
-		Task task = new Task("id", "ctx", new TaskStatus(TaskState.COMPLETED), null, null, null);
+	void send_whenConnectionRefused_returnsErrorMessage() {
+		AgentCard agentCard = unreachableAgentCard();
+		Message message = A2A.toUserMessage("hello");
 
-		String result = A2ATransport.extractTextFromTask(task);
+		String result = A2ATransport.send(agentCard, message);
 
-		assertThat(result).isEmpty();
+		assertThat(result).startsWith("Error communicating with agent '" + AGENT_NAME + "'");
 	}
 
+	/**
+	 * Verifies that the error message embeds the original exception message so callers
+	 * can diagnose failures.
+	 */
 	@Test
-	void extractTextFromTask_emptyArtifacts_returnsEmpty() {
-		Task task = taskWithArtifacts(List.of());
+	void send_whenConnectionRefused_errorMessageContainsCause() {
+		AgentCard agentCard = unreachableAgentCard();
+		Message message = A2A.toUserMessage("hello");
 
-		String result = A2ATransport.extractTextFromTask(task);
+		String result = A2ATransport.send(agentCard, message);
 
-		assertThat(result).isEmpty();
+		// Error format: "Error communicating with agent '<name>': <cause>"
+		assertThat(result).contains(": ");
+		assertThat(result).isNotEqualTo("Error communicating with agent '" + AGENT_NAME + "': ");
 	}
 
-	@Test
-	void extractTextFromTask_singleTextPart_returnsText() {
-		Task task = taskWithArtifacts(List.of(artifactWithParts(List.of(new TextPart("hello")))));
-
-		String result = A2ATransport.extractTextFromTask(task);
-
-		assertThat(result).isEqualTo("hello");
-	}
-
-	@Test
-	void extractTextFromTask_multipleTextParts_concatenatesAll() {
-		Task task = taskWithArtifacts(List.of(artifactWithParts(List.of(new TextPart("foo"), new TextPart("bar")))));
-
-		String result = A2ATransport.extractTextFromTask(task);
-
-		assertThat(result).isEqualTo("foobar");
-	}
-
-	@Test
-	void extractTextFromTask_multipleArtifacts_concatenatesAcrossAll() {
-		Task task = taskWithArtifacts(List.of(artifactWithParts(List.of(new TextPart("first "))),
-				artifactWithParts(List.of(new TextPart("second")))));
-
-		String result = A2ATransport.extractTextFromTask(task);
-
-		assertThat(result).isEqualTo("first second");
-	}
-
-	@Test
-	void extractTextFromTask_nonTextPart_skipped() {
-		Task task = taskWithArtifacts(List.of(artifactWithParts(List.of(new DataPart(Map.of("key", "value"))))));
-
-		String result = A2ATransport.extractTextFromTask(task);
-
-		assertThat(result).isEmpty();
-	}
-
-	@Test
-	void extractTextFromTask_mixedParts_onlyTextExtracted() {
-		Task task = taskWithArtifacts(
-				List.of(artifactWithParts(List.of(new TextPart("text"), new DataPart(Map.of("key", "value"))))));
-
-		String result = A2ATransport.extractTextFromTask(task);
-
-		assertThat(result).isEqualTo("text");
-	}
-
-	private static Task taskWithArtifacts(List<Artifact> artifacts) {
-		return new Task("id", "ctx", new TaskStatus(TaskState.COMPLETED), artifacts, null, null);
-	}
-
-	private static Artifact artifactWithParts(List<Part<?>> parts) {
-		return new Artifact("artifact-1", null, null, parts, null, null);
+	private static AgentCard unreachableAgentCard() {
+		// Port 1 on localhost is a privileged port that is never bound in practice,
+		// so the connection is refused immediately without waiting for a timeout.
+		String url = "http://localhost:1";
+		return new AgentCard.Builder().name(AGENT_NAME)
+			.description("A test agent that is intentionally unreachable")
+			.url(url)
+			.additionalInterfaces(List.of(new AgentInterface(TransportProtocol.JSONRPC.asString(), url)))
+			.version("1.0.0")
+			.capabilities(new AgentCapabilities.Builder().streaming(false).pushNotifications(false).build())
+			.defaultInputModes(List.of("text"))
+			.defaultOutputModes(List.of("text"))
+			.skills(List.of())
+			.build();
 	}
 
 }

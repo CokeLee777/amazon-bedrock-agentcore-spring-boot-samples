@@ -8,6 +8,7 @@ import io.a2a.spec.AgentSkill;
 import io.a2a.spec.TransportProtocol;
 import io.github.cokelee777.a2a.server.executor.ChatClientExecutorHandler;
 import io.github.cokelee777.a2a.server.executor.DefaultAgentExecutor;
+import io.github.cokelee777.agent.common.util.TextExtractor;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
@@ -71,7 +72,7 @@ public class DeliveryAgentApplication {
 	public AgentExecutor agentExecutor(ChatClient.Builder builder, DeliveryTools tools) {
 		ChatClient chatClient = builder.clone().defaultSystem(SYSTEM_PROMPT).defaultTools(tools).build();
 		ChatClientExecutorHandler handler = (chat, ctx) -> {
-			String msg = DefaultAgentExecutor.extractTextFromMessage(ctx.getMessage());
+			String msg = TextExtractor.extractTextFromMessage(ctx.getMessage());
 			return chat.prompt().user(msg).call().content();
 		};
 		return new DefaultAgentExecutor(chatClient, handler);

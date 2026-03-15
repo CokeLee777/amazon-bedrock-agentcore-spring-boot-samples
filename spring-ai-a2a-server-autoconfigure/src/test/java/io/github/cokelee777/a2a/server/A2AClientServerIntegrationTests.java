@@ -82,9 +82,7 @@ class A2AClientServerIntegrationTests {
 		 */
 		@Bean
 		public AgentExecutor testAgentExecutor(ChatClient testChatClient) {
-			return new DefaultAgentExecutor(testChatClient, (chatClient, requestContext) -> DefaultAgentExecutor
-				.extractTextFromMessage(requestContext.getMessage())) {
-			};
+			return new DefaultAgentExecutor(testChatClient, (chatClient, requestContext) -> "test response");
 		}
 
 	}
