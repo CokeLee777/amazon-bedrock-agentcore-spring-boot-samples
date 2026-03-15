@@ -1,0 +1,93 @@
+package io.github.cokelee777.agent.common;
+
+import io.a2a.A2A;
+import io.a2a.spec.AgentCard;
+import lombok.extern.slf4j.Slf4j;
+
+import java.net.URI;
+import java.util.Optional;
+
+/**
+ * Lazily loads and caches an {@link AgentCard} from a downstream A2A agent URL.
+ *
+ * <p>
+ * Attempts to fetch the {@link AgentCard} immediately on construction. If the fetch fails
+ * (e.g., the downstream agent is not yet available), the URL is retained and
+ * {@link #get()} retries the fetch on every subsequent call until it succeeds.
+ * </p>
+ *
+ * <p>
+ * Example usage:
+ * </p>
+ *
+ * <pre>{@code
+ * LazyAgentCard lazyCard = new LazyAgentCard("http://localhost:9002");
+ * lazyCard.get().ifPresentOrElse(
+ *     card -> A2ATransport.send(card, message),
+ *     () -> log.warn("Agent not available yet")
+ * );
+ * }</pre>
+ */
+@Slf4j
+public class LazyAgentCard {
+
+	private final String agentUrl;
+
+	private volatile AgentCard card;
+
+	/**
+	 * Creates a {@link LazyAgentCard} for the given URL and immediately attempts to fetch
+	 * the {@link AgentCard}.
+	 * @param agentUrl the base URL of the downstream A2A agent
+	 */
+	public LazyAgentCard(String agentUrl) {
+		this.agentUrl = agentUrl;
+		tryFetch();
+	}
+
+	/**
+	 * Returns the cached {@link AgentCard}, retrying the fetch if not yet loaded.
+	 *
+	 * <p>
+	 * If the card was not successfully loaded at construction time, this method attempts
+	 * to fetch it again on every call until it succeeds. Use this method when the caller
+	 * intends to actually communicate with the agent (e.g., inside {@code sendMessage}).
+	 * For read-only status checks use {@link #peek()} to avoid redundant network calls.
+	 * </p>
+	 * @return an {@link Optional} containing the {@link AgentCard}, or empty if the agent
+	 * is still unreachable
+	 */
+	public Optional<AgentCard> get() {
+		if (this.card == null) {
+			tryFetch();
+		}
+		return Optional.ofNullable(this.card);
+	}
+
+	/**
+	 * Returns the currently cached {@link AgentCard} without triggering a fetch.
+	 *
+	 * <p>
+	 * Unlike {@link #get()}, this method never issues a network request. It is intended
+	 * for informational queries (e.g., building system prompts, listing agent names)
+	 * where a missing card should simply be omitted rather than retried.
+	 * </p>
+	 * @return an {@link Optional} containing the {@link AgentCard}, or empty if not yet
+	 * loaded
+	 */
+	public Optional<AgentCard> peek() {
+		return Optional.ofNullable(this.card);
+	}
+
+	private void tryFetch() {
+		try {
+			String path = new URI(this.agentUrl).getPath();
+			this.card = A2A.getAgentCard(this.agentUrl, path + ".well-known/agent-card.json", null);
+			log.info("Resolved agent card '{}' from {}", this.card.name(), this.agentUrl);
+		}
+		catch (Exception e) {
+			log.warn("Failed to resolve agent card from {}: {}", this.agentUrl, e.getMessage());
+		}
+	}
+
+}

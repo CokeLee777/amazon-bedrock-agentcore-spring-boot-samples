@@ -33,15 +33,15 @@ Agent       Agent     Agent
 
 ## 모듈 구조
 
-| 모듈 | 포트   | 설명                                                  |
-|------|------|-----------------------------------------------------|
-| `agent-common` | —    | A2A 클라이언트 `A2aTransport`, `TextExtractor` 등 공유 유틸리티 |
-| `spring-ai-a2a-server` | —    | A2A 서버 구현체 (AgentCard, Message 컨트롤러, Task 컨트롤러)     |
-| `spring-ai-a2a-server-autoconfigure` | —    | A2A 서버/공통 인프라 자동 구성                                 |
-| `agents:host-agent` | 8080 | AgentCore Runtime 진입점 · 오케스트레이터                     |
-| `agents:order-agent` | 9000 | 주문 조회 · 취소 가능 여부 확인 A2A 에이전트                        |
-| `agents:delivery-agent` | 9000 | 배송 추적 A2A 에이전트                                      |
-| `agents:payment-agent` | 9000 | 결제/환불 상태 확인 A2A 에이전트                                |
+| 모듈 | 포트   | 설명                                                                          |
+|------|------|-----------------------------------------------------------------------------|
+| `agent-common` | —    | `A2ATransport`, `LazyAgentCard`, `TextExtractor` 등 공유 유틸리티                  |
+| `spring-ai-a2a-server` | —    | A2A 서버 구현체 (AgentCard, Message 컨트롤러, Task 컨트롤러)                             |
+| `spring-ai-a2a-server-autoconfigure` | —    | A2A 서버/공통 인프라 자동 구성                                                        |
+| `agents:host-agent` | 8080 | AgentCore Runtime 진입점 · 오케스트레이터                                             |
+| `agents:order-agent` | 9001 | 주문 조회 · 취소 가능 여부 확인 A2A 에이전트 (delivery/payment 에이전트 호출 포함)                  |
+| `agents:delivery-agent` | 9002 | 배송 추적 A2A 에이전트                                                              |
+| `agents:payment-agent` | 9003 | 결제/환불 상태 확인 A2A 에이전트                                                        |
 
 ## 전제 조건
 
