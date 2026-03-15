@@ -1,4 +1,4 @@
-package io.github.cokelee777.a2a.common;
+package io.github.cokelee777.agent.common;
 
 import io.a2a.client.Client;
 import io.a2a.client.ClientEvent;

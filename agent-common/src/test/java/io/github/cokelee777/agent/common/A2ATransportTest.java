@@ -1,4 +1,4 @@
-package io.github.cokelee777.a2a.common;
+package io.github.cokelee777.agent.common;
 
 import io.a2a.spec.Artifact;
 import io.a2a.spec.DataPart;

@@ -1,4 +1,4 @@
-package io.github.cokelee777.a2a.agent.delivery;
+package io.github.cokelee777.agent.common;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -22,13 +22,13 @@ public class PingController {
 	 */
 	@GetMapping(value = "/ping", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<PingResponse> ping() {
-		return ResponseEntity.ok(new PingResponse("healthy"));
+		return ResponseEntity.ok(new PingResponse("Healthy"));
 	}
 
 	/**
 	 * Response body for the {@code GET /ping} health check endpoint.
 	 *
-	 * @param status health status string (e.g., {@code "healthy"})
+	 * @param status health status string (e.g., {@code "Healthy"})
 	 */
 	public record PingResponse(String status) {
 	}

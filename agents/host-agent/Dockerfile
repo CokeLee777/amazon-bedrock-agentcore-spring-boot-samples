@@ -24,7 +24,7 @@ WORKDIR /app
 
 COPY gradlew settings.gradle.kts build.gradle.kts ./
 COPY gradle ./gradle
-COPY a2a-common ./a2a-common
+COPY agent-common ./agent-common
 COPY spring-ai-a2a-server ./spring-ai-a2a-server
 COPY spring-ai-a2a-server-autoconfigure ./spring-ai-a2a-server-autoconfigure
 COPY agents/host-agent ./agents/host-agent

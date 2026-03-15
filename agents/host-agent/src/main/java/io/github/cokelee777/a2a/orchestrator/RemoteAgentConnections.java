@@ -3,11 +3,10 @@ package io.github.cokelee777.a2a.orchestrator;
 import io.a2a.A2A;
 import io.a2a.spec.AgentCard;
 import io.a2a.spec.Message;
-import io.github.cokelee777.a2a.common.A2ATransport;
+import io.github.cokelee777.agent.common.A2ATransport;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.tool.annotation.Tool;
 import org.springframework.ai.tool.annotation.ToolParam;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.net.URI;
