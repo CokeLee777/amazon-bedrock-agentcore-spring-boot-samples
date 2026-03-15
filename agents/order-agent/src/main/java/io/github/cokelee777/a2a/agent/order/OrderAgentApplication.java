@@ -12,6 +12,7 @@ import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 
 import java.util.List;
@@ -26,9 +27,15 @@ import java.util.List;
  * </p>
  */
 @SpringBootApplication
+@EnableConfigurationProperties(RemoteAgentProperties.class)
 public class OrderAgentApplication {
 
-	private static final String SYSTEM_PROMPT = "당신은 주문 조회 전문 에이전트입니다. 주문 내역 조회와 취소 가능 여부를 확인합니다.";
+	private static final String SYSTEM_PROMPT = """
+			당신은 주문 조회 전문 에이전트입니다.
+			주문 내역 조회 시 배송 에이전트를 통해 각 주문의 최신 배송 상태를 실시간으로 가져옵니다.
+			취소 가능 여부 확인 시 결제 에이전트를 통해 결제 상태를 조회하여 종합적으로 판단합니다.
+			실제 취소나 환불 처리는 수행하지 않으며, 조회 및 판단만 제공합니다.
+			""";
 
 	/**
 	 * Starts the Order Agent.
@@ -46,7 +53,7 @@ public class OrderAgentApplication {
 	@Bean
 	public AgentCard agentCard(@Value("${a2a.agent-url}") String agentUrl) {
 		return new AgentCard.Builder().name("Order Agent")
-			.description("주문 내역 조회 및 취소 가능 여부를 확인하는 에이전트")
+			.description("주문 내역 조회 및 취소 가능 여부를 확인하는 에이전트. 배송 에이전트와 결제 에이전트를 내부적으로 호출하여 통합 정보를 제공합니다.")
 			.url(agentUrl)
 			.additionalInterfaces(List.of(new AgentInterface(TransportProtocol.JSONRPC.asString(), agentUrl)))
 			.version("1.0.0")

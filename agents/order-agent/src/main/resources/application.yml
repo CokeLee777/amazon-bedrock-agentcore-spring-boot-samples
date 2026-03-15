@@ -13,3 +13,10 @@ spring:
 
 a2a:
   agent-url: ${AGENT_URL:http://localhost:9000}
+
+remote:
+  agents:
+    delivery-agent:
+      url: ${DELIVERY_AGENT_URL:http://localhost:9002}
+    payment-agent:
+      url: ${PAYMENT_AGENT_URL:http://localhost:9003}
